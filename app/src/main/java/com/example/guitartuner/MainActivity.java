@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.guitartuner.databinding.ActivityMainBinding;
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     VarGlob VarG = new VarGlob();
     ActivityMainBinding binding;
+
+boolean testdone=false;
     private boolean permissionToRecordAccepted = false;
     private final String[] permissions = {Manifest.permission.RECORD_AUDIO};
 
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
                 permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 break;
         }
+
+        testdone=true;
         if (!permissionToRecordAccepted) finish();
 
     }
@@ -36,17 +42,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        testdone=false;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         VarG.Setmain(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), VarG);
-        ViewPager viewPager = binding.viewPager;
-        viewPager.setAdapter(sectionsPagerAdapter);
+        permissionToRecordAccepted=false;
 
-     TabLayout tabs = binding.tabs;
-       tabs.setupWithViewPager(viewPager);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO},
+                    REQUEST_RECORD_AUDIO_PERMISSION);
+int i=0;
+            while (!testdone && i < 200 &&  !permissionToRecordAccepted) {
+                i++;
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
+        }else{
+            permissionToRecordAccepted=true;
+        }
+
+if(permissionToRecordAccepted) {
+
+    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), VarG);
+    ViewPager viewPager = binding.viewPager;
+    viewPager.setAdapter(sectionsPagerAdapter);
+
+    TabLayout tabs = binding.tabs;
+    tabs.setupWithViewPager(viewPager);
+
+}
+
 /*llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
         FloatingActionButton fab = binding.fab;
 
