@@ -134,7 +134,7 @@ public class RealtimeUpdates extends Fragment {
 
             graph.addSeries(mSeries2[i]);
         }
-        mSeries2[0].setColor(Color.WHITE);
+        mSeries2[0].setColor(Color.GRAY);
         mSeries2[1].setColor(Color.RED);
         mSeries2[2].setColor(Color.RED);
 

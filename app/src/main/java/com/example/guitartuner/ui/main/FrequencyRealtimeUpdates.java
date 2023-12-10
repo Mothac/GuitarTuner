@@ -145,7 +145,7 @@ graph.getViewport().setScrollable(true);
 
             graph.addSeries(mSeries2[i]);
         }
-        mSeries2[0].setColor(Color.WHITE);
+        mSeries2[0].setColor(Color.GRAY);
 
 
         Create_handler();
